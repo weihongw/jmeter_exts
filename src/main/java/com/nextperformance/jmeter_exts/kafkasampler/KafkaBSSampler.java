@@ -5,19 +5,55 @@ import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.config.Arguments;
 
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Subscriber;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
-public class KafkaPBSampler extends AbstractJavaSamplerClient {
+public class KafkaBSSampler extends AbstractJavaSamplerClient {
 
-    private static final Logger log = LoggerFactory.getLogger(KafkaPBSampler.class);
+    class ResultSubscriber extends SampleResult {
+        Subscriber<RecordMetadata> subscriber = new Subscriber<RecordMetadata>() {
+            @Override
+            public void onCompleted() {
+                return;
+            }
 
-    private KafkaPBProducer producer;
+            @Override
+            public void onError(Throwable e) {
+                log.debug(e.getLocalizedMessage());
+                return;
+            }
+
+            @Override
+            public void onNext(RecordMetadata recordMetadata) {
+                String data = "topic: " + recordMetadata.topic() + ", partition: "
+                        + recordMetadata.partition() + ", offset: "
+                        + recordMetadata.offset();
+                setSamplerData(data);
+                sampleEnd();
+            }
+        };
+
+        Subscriber<RecordMetadata> getSubscriber() {
+            return subscriber;
+        }
+    }
+
+    private static final Logger log = LoggerFactory.getLogger(KafkaBSSampler.class);
+
+    private KafkaBinaryMsgProducer producer;
     private String topic;
     private double userOnlyPercentage, websiteOnlyPercentage, userAndWebsitePercentage;
+    private ArrayList<ResultSubscriber> results = new ArrayList<>();
+    private Iterator<ResultSubscriber> resultsIter = results.iterator();
+    private final int capacityResults = 1000;
+    private int sizeResults = 0;
 
     @Override
     public void setupTest(JavaSamplerContext context) {
@@ -47,7 +83,7 @@ public class KafkaPBSampler extends AbstractJavaSamplerClient {
         }
 
         try {
-            producer = KafkaPBProducer.newBuilder(appID, hosts)
+            producer = KafkaBinaryMsgProducer.newBuilder(appID, hosts)
                     .withRequestTimeoutMs(requestTimeout)
                     .withMaxBlockMs(maxBlockMs)
                     .withAckType(ackType)
@@ -58,14 +94,12 @@ public class KafkaPBSampler extends AbstractJavaSamplerClient {
         }
     }
 
-    /* Implements JavaSamplerClient.teardownTest(JavaSamplerContext) */
     @Override
     public void teardownTest(JavaSamplerContext context) {
         log.debug(getClass().getName() + ": teardownTest");
         producer.close();
     }
 
-    /* Implements JavaSamplerClient.getDefaultParameters() */
     @Override
     public Arguments getDefaultParameters() {
         Arguments defaultArgs = new Arguments();
@@ -100,7 +134,8 @@ public class KafkaPBSampler extends AbstractJavaSamplerClient {
 
     @Override
     public SampleResult runTest(JavaSamplerContext context) {
-        SampleResult result = new SampleResult();
+
+        ResultSubscriber result = getNextResultSpot();
 
         result.sampleStart();
 
@@ -111,16 +146,33 @@ public class KafkaPBSampler extends AbstractJavaSamplerClient {
         Double dice = Math.random();
 
         if(dice < userOnlyPercentage)
-            msg = KafkaRandomPBMessageBuilder.buildBSLogMessageUserOnly(rawBidRequest, uuid);
+            msg = KafkaBSMessageBuilder.buildBSLogMessageUserOnly(rawBidRequest, uuid);
         else if(dice < (userOnlyPercentage + websiteOnlyPercentage))
-            msg = KafkaRandomPBMessageBuilder.buildBSLogMessageWebsiteOnly(rawBidRequest, uuid);
+            msg = KafkaBSMessageBuilder.buildBSLogMessageWebsiteOnly(rawBidRequest, uuid);
         else
-            msg = KafkaRandomPBMessageBuilder.buildBSLogMessageUserAndWebsite(rawBidRequest, uuid);
+            msg = KafkaBSMessageBuilder.buildBSLogMessageUserAndWebsite(rawBidRequest, uuid);
 
-        producer.send(msg, topic);
+        producer.send(msg, topic).subscribe(result.getSubscriber());
 
-        result.sampleEnd();
+        return result;
+    }
 
+    private ResultSubscriber getNextResultSpot() {
+        ResultSubscriber result = null;
+
+        // recycling the spots
+        if (resultsIter.hasNext())
+            result = resultsIter.next();
+        else if (sizeResults < capacityResults) {
+            result = new ResultSubscriber();
+            results.add(result);
+            resultsIter = results.listIterator(sizeResults);    // end
+            sizeResults ++;
+        }
+        else {
+            resultsIter = results.listIterator();               // index 0
+            result = resultsIter.next();
+        }
         return result;
     }
 }

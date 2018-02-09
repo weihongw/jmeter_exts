@@ -1,11 +1,10 @@
 package com.nextperformance.jmeter_exts.kafkasampler;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import javax.annotation.concurrent.NotThreadSafe;
@@ -14,6 +13,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -21,7 +21,9 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Kafka binary producer for protobuf message
  */
 @ThreadSafe
-public class KafkaPBProducer {
+public class KafkaBinaryMsgProducer {
+    private static final Logger log = LoggerFactory.getLogger(KafkaBinaryMsgProducer.class);
+
     private static final int DEFAULT_MAX_BLOCK_MS = 30000;
     private static final int DEFAULT_REQUEST_TIMEOUT_MS = 1000;
     private static final String DEFAULT_ACK_TYPE = "1";
@@ -80,8 +82,8 @@ public class KafkaPBProducer {
             return this;
         }
 
-        public KafkaPBProducer build() {
-            return new KafkaPBProducer(this);
+        public KafkaBinaryMsgProducer build() {
+            return new KafkaBinaryMsgProducer(this);
         }
     }
 
@@ -89,7 +91,7 @@ public class KafkaPBProducer {
         return new BinaryProducerBuilder(applicationId, brokerList);
     }
 
-    KafkaPBProducer(BinaryProducerBuilder builder) {
+    KafkaBinaryMsgProducer(BinaryProducerBuilder builder) {
         Map<String, Object> conf = new HashMap<>();
         conf.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, builder.brokerList);
         conf.put(ProducerConfig.CLIENT_ID_CONFIG, builder.applicationId);
@@ -111,16 +113,20 @@ public class KafkaPBProducer {
         kafkaProducer.close();
     }
 
+
     public Observable<RecordMetadata> send(BSLogMessage message, String topic) {
         if (message == null) {
             return Observable.error(new IllegalArgumentException("Message must not be null"));
         }
+
         if (topic == null) {
             return Observable.error(new IllegalArgumentException("Topic must not be null"));
         }
+
         if (kafkaProducer == null) {
             return Observable.error(new IllegalArgumentException("The kafka producer must not be null"));
         }
+
         return Observable.create(subscriber -> {
             if (subscriber.isUnsubscribed()) {
                 return;
@@ -140,4 +146,29 @@ public class KafkaPBProducer {
             }
         });
     }
+
+    /*
+    public Future<RecordMetadata> send(BSLogMessage message, String topic) throws IllegalArgumentException {
+        if (message == null) {
+            throw new IllegalArgumentException("Message must not be null");
+        }
+        if (topic == null) {
+            throw new IllegalArgumentException("Topic must not be null");
+        }
+        if (kafkaProducer == null) {
+            throw new IllegalArgumentException("The kafka producer must not be null");
+        }
+
+        Future<RecordMetadata> result = null;
+
+        try {
+            ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topic, message.getId(), message.toByteArray());
+            result = kafkaProducer.send(record);
+        } catch (Exception e) {
+            log.error("Exception thrown during kafka send: " + e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+    */
 }

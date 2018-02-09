@@ -9,7 +9,7 @@ import com.nextperf.log.message.Logs;
 import com.nextperf.log.protobuf.CommonHeader;
 import com.nextperf.log.protobuf.BrandSafety;
 
-public class KafkaRandomPBMessageBuilder {
+public class KafkaBSMessageBuilder {
     static BrandSafety.BSLogSchema.Builder builder = BrandSafety.BSLogSchema.newBuilder();
     static CommonHeader.Header.Builder headerBuilder = CommonHeader.Header.newBuilder();
 
@@ -29,7 +29,7 @@ public class KafkaRandomPBMessageBuilder {
         updateMapUserWebsite.get(1).add(BrandSafety.BSLogSchema.BSUpdateType.WEBSITE_VALUE);
     }
 
-    private KafkaRandomPBMessageBuilder() {};
+    private KafkaBSMessageBuilder() {};
 
     private static BSLogMessage buildBSLogMessage(String rawBidRequest,
                                                  String uuid,
