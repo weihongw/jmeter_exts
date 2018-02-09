@@ -1,5 +1,6 @@
 # jmeter_exts
 Proprietary extensions
+
 It provides a JMeter "sampler" that publishes a brand safety Kafka message in each iteration.  Kafka parameters are configurable through GUI.
 
 To use it with JMeter, first build the jar:
