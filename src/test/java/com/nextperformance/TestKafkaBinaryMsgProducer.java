@@ -31,13 +31,13 @@ public class TestKafkaBinaryMsgProducer {
 //        hosts.add("localhost:9092");
         hosts.add("kafka-test01.geu.nextperf.local:9092");
 
-        pbProducer = KafkaBinaryMsgProducer.newBuilder("test", hosts)
+        pbProducer = KafkaBinaryMsgProducer.newBuilder("brandSafety test", hosts)
                 .withRequestTimeoutMs(1000)
                 .withMaxBlockMs(30000)
                 .withAckType("1")
                 .build();
 
-        topic = "test";
+        topic = "brandSafety";
     }
 
     @After
@@ -45,7 +45,7 @@ public class TestKafkaBinaryMsgProducer {
         pbProducer.close();
     }
 
-//    @Ignore("This test should be ignored unless Kafka is run locally")
+//    @Ignore("This test should be ignored unless Kafka is running on the specified host(s)")
     @Test
     public void testSend() {
         String br = "{\"id\":\"2520760927708276680\",  " +
@@ -63,17 +63,17 @@ public class TestKafkaBinaryMsgProducer {
             producer.setAccessible(true);
             KafkaProducer p = (KafkaProducer)producer.get(pbProducer);
 
-            BSLogMessage message = KafkaBSMessageBuilder.buildBSLogMessageUserOnly(br, uuid);
+            BSLogMessage message = KafkaBSMessageBuilder.buildBSLogMessageWebsiteOnly(br, uuid);
 
             ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(topic, message.getId(), message.toByteArray());
             p.send(record, new MyCallback());
 
-            Thread.sleep(20);
+            Thread.sleep(1500);
 
             log.debug(MyCallback.status);
 
             assertNotNull(MyCallback.status);
-            assertTrue(MyCallback.status.startsWith(topic));
+            assertTrue(MyCallback.status.startsWith("topic"));
 
         } catch (Exception e) {
             e.printStackTrace();

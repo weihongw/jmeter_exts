@@ -10,8 +10,6 @@ import com.nextperf.log.protobuf.CommonHeader;
 import com.nextperf.log.protobuf.BrandSafety;
 
 public class KafkaBSMessageBuilder {
-    static BrandSafety.BSLogSchema.Builder builder = BrandSafety.BSLogSchema.newBuilder();
-    static CommonHeader.Header.Builder headerBuilder = CommonHeader.Header.newBuilder();
 
     static HashMap<Integer, List<Integer>> updateMapUserOnly = new HashMap<>();
     static HashMap<Integer, List<Integer>> updateMapWebsiteOnly = new HashMap<>();
@@ -34,6 +32,10 @@ public class KafkaBSMessageBuilder {
     private static BSLogMessage buildBSLogMessage(String rawBidRequest,
                                                  String uuid,
                                                  HashMap<Integer, List<Integer>> updateMap) {
+
+        BrandSafety.BSLogSchema.Builder builder = BrandSafety.BSLogSchema.newBuilder();
+        CommonHeader.Header.Builder headerBuilder = CommonHeader.Header.newBuilder();
+
         headerBuilder.setId(Logs.generateLogId());
         builder.setHeader(headerBuilder);
 
