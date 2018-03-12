@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0-SNAPSHOT.20180205">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">2000</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Java Request" enabled="true">
+          <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="application ID" elementType="Argument">
+                <stringProp name="Argument.name">application ID</stringProp>
+                <stringProp name="Argument.value">brand safety test</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="broker list" elementType="Argument">
+                <stringProp name="Argument.name">broker list</stringProp>
+                <stringProp name="Argument.value">kafka-test01.geu.nextperf.local:9092, kafka-test02.geu.nextperf.local:9092, kafka-test03.geu.nextperf.local:9092</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="max.block.ms" elementType="Argument">
+                <stringProp name="Argument.name">max.block.ms</stringProp>
+                <stringProp name="Argument.value">30000</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="request.timeout.ms" elementType="Argument">
+                <stringProp name="Argument.name">request.timeout.ms</stringProp>
+                <stringProp name="Argument.value">1000</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="number of acks" elementType="Argument">
+                <stringProp name="Argument.name">number of acks</stringProp>
+                <stringProp name="Argument.value">1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="linger.ms" elementType="Argument">
+                <stringProp name="Argument.name">linger.ms</stringProp>
+                <stringProp name="Argument.value">0</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="retries" elementType="Argument">
+                <stringProp name="Argument.name">retries</stringProp>
+                <stringProp name="Argument.value">1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="batch.size" elementType="Argument">
+                <stringProp name="Argument.name">batch.size</stringProp>
+                <stringProp name="Argument.value">65536</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="bid request" elementType="Argument">
+                <stringProp name="Argument.name">bid request</stringProp>
+                <stringProp name="Argument.value">{&quot;id&quot;:&quot;2520760927708276680&quot;,  &quot;imp&quot;:[{&quot;id&quot;: &quot;8b747d53-c030-42d4-95d3-aacafcb0a346&quot;, &quot;banner&quot;: {&quot;w&quot;: 300,&quot;h&quot;: 250 }}],  &quot;site&quot;: {&quot;id&quot;: &quot;45335&quot;, &quot;page&quot;: &quot;regie.free.fr&quot;  },  &quot;device&quot;: {&quot;ua&quot;: &quot;Mozilla&quot;, &quot;ip&quot;: &quot;82.67.77.18&quot;, &quot;geo&quot;: {&quot;country&quot;: &quot;FRA&quot;}},  &quot;user&quot;: {&quot;id&quot;: &quot;5502727545525838854&quot;, &quot;buyeruid&quot;:&quot;6f9120c9-bc2a-4903-9a0f-84cbcbd03e4f&quot;},  &quot;tmax&quot;: &quot;5000&quot;,  &quot;wseat&quot;: [&quot;Agency1&quot;],  &quot;bcat&quot;: [&quot;IAB1-1&quot;],  &quot;badv&quot;: [&quot;google.com&quot;],  &quot;cur&quot;: [&quot;USD&quot; ]}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="uuid" elementType="Argument">
+                <stringProp name="Argument.name">uuid</stringProp>
+                <stringProp name="Argument.value">6f9120c9-bc2a-4903-9a0f-84cbcbd03e4f</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Percentage of user-info only requests" elementType="Argument">
+                <stringProp name="Argument.name">Percentage of user-info only requests</stringProp>
+                <stringProp name="Argument.value">33.3</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Percentage of website-info only requests" elementType="Argument">
+                <stringProp name="Argument.name">Percentage of website-info only requests</stringProp>
+                <stringProp name="Argument.value">33.3</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Percentage of requests for both user and website info" elementType="Argument">
+                <stringProp name="Argument.name">Percentage of requests for both user and website info</stringProp>
+                <stringProp name="Argument.value">33.3</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="topic" elementType="Argument">
+                <stringProp name="Argument.name">topic</stringProp>
+                <stringProp name="Argument.value">brandSafety</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="classname">com.nextperformance.jmeter_exts.kafkasampler.KafkaPBSampler</stringProp>
+        </JavaSampler>
+        <hashTree>
+          <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="queries" enabled="true">
+            <stringProp name="filename">/Users/weihong.wang/git/jmeter_exts/src/main/resources/postgres_background_traffic.sql</stringProp>
+            <stringProp name="fileEncoding"></stringProp>
+            <stringProp name="variableNames">line</stringProp>
+            <boolProp name="ignoreFirstLine">false</boolProp>
+            <stringProp name="delimiter">\n</stringProp>
+            <boolProp name="quotedData">true</boolProp>
+            <boolProp name="recycle">true</boolProp>
+            <boolProp name="stopThread">false</boolProp>
+            <stringProp name="shareMode">shareMode.all</stringProp>
+          </CSVDataSet>
+          <hashTree/>
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="postgres query pace" enabled="true">
+            <intProp name="calcMode">2</intProp>
+            <doubleProp>
+              <name>throughput</name>
+              <value>250.0</value>
+              <savedValue>0.0</savedValue>
+            </doubleProp>
+          </ConstantThroughputTimer>
+          <hashTree/>
+        </hashTree>
+        <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Java Request" enabled="true">
+          <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="application ID" elementType="Argument">
+                <stringProp name="Argument.name">application ID</stringProp>
+                <stringProp name="Argument.value">brand safety test</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="broker list" elementType="Argument">
+                <stringProp name="Argument.name">broker list</stringProp>
+                <stringProp name="Argument.value">kafka-test01.geu.nextperf.local:9092, kafka-test02.geu.nextperf.local:9092, kafka-test03.geu.nextperf.local:9092</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="max.block.ms" elementType="Argument">
+                <stringProp name="Argument.name">max.block.ms</stringProp>
+                <stringProp name="Argument.value">30000</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="request.timeout.ms" elementType="Argument">
+                <stringProp name="Argument.name">request.timeout.ms</stringProp>
+                <stringProp name="Argument.value">1000</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="number of acks" elementType="Argument">
+                <stringProp name="Argument.name">number of acks</stringProp>
+                <stringProp name="Argument.value">1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="linger.ms" elementType="Argument">
+                <stringProp name="Argument.name">linger.ms</stringProp>
+                <stringProp name="Argument.value">0</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="retries" elementType="Argument">
+                <stringProp name="Argument.name">retries</stringProp>
+                <stringProp name="Argument.value">1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="batch.size" elementType="Argument">
+                <stringProp name="Argument.name">batch.size</stringProp>
+                <stringProp name="Argument.value">65536</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="bid request" elementType="Argument">
+                <stringProp name="Argument.name">bid request</stringProp>
+                <stringProp name="Argument.value">{&quot;id&quot;:&quot;2520760927708276680&quot;,  &quot;imp&quot;:[{&quot;id&quot;: &quot;8b747d53-c030-42d4-95d3-aacafcb0a346&quot;, &quot;banner&quot;: {&quot;w&quot;: 300,&quot;h&quot;: 250 }}],  &quot;site&quot;: {&quot;id&quot;: &quot;45335&quot;, &quot;page&quot;: &quot;regie.free.fr&quot;  },  &quot;device&quot;: {&quot;ua&quot;: &quot;Mozilla&quot;, &quot;ip&quot;: &quot;82.67.77.18&quot;, &quot;geo&quot;: {&quot;country&quot;: &quot;FRA&quot;}},  &quot;user&quot;: {&quot;id&quot;: &quot;5502727545525838854&quot;, &quot;buyeruid&quot;:&quot;6f9120c9-bc2a-4903-9a0f-84cbcbd03e4f&quot;},  &quot;tmax&quot;: &quot;5000&quot;,  &quot;wseat&quot;: [&quot;Agency1&quot;],  &quot;bcat&quot;: [&quot;IAB1-1&quot;],  &quot;badv&quot;: [&quot;google.com&quot;],  &quot;cur&quot;: [&quot;USD&quot; ]}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="uuid" elementType="Argument">
+                <stringProp name="Argument.name">uuid</stringProp>
+                <stringProp name="Argument.value">6f9120c9-bc2a-4903-9a0f-84cbcbd03e4f</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Percentage of user-info only requests" elementType="Argument">
+                <stringProp name="Argument.name">Percentage of user-info only requests</stringProp>
+                <stringProp name="Argument.value">33.3</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Percentage of website-info only requests" elementType="Argument">
+                <stringProp name="Argument.name">Percentage of website-info only requests</stringProp>
+                <stringProp name="Argument.value">33.3</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="Percentage of requests for both user and website info" elementType="Argument">
+                <stringProp name="Argument.name">Percentage of requests for both user and website info</stringProp>
+                <stringProp name="Argument.value">33.3</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="topic" elementType="Argument">
+                <stringProp name="Argument.name">topic</stringProp>
+                <stringProp name="Argument.value">brandSafety</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="classname">com.nextperformance.jmeter_exts.kafkasampler.KafkaBSSampler</stringProp>
+        </JavaSampler>
+        <hashTree>
+          <ConstantThroughputTimer guiclass="TestBeanGUI" testclass="ConstantThroughputTimer" testname="Constant Throughput Timer" enabled="true">
+            <doubleProp>
+              <name>throughput</name>
+              <value>1000.0</value>
+              <savedValue>0.0</savedValue>
+            </doubleProp>
+            <intProp name="calcMode">4</intProp>
+          </ConstantThroughputTimer>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
